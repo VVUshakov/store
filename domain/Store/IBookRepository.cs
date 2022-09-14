@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Store
 {
     public interface IBookRepository
-    {        
+    {
         Book[] GetAllByTiile(string titlePart);
+
     }
 }
