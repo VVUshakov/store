@@ -30,12 +30,14 @@ public class Book
                     .Replace(" ", "")
                     .ToUpper();
 
-        /*
-         * Шаблон текста строки:
+        /* Шаблон текста строки:
          * Строка должна начинаться с абревиатуры ISBN (^ISBN...)
          * далее содержать 10 или 13 цифр (...\d{10}(\d{3})?...),
-         * и после цифр должен быть конец строки (...$)
-        */
+         * и после цифр должен быть конец строки (...$)*/
+        /* Line text template:
+         * The line must begin with the ISBN abbreviation (^ISBN...)
+         * then contain 10 or 13 digits (...\d{10}(\d{3})?...),
+         * and after the numbers there must be the end of the line (... $) */
         return Regex.IsMatch(isbn, @"^ISBN\d{10}(\d{3})?$");
     }
 }
