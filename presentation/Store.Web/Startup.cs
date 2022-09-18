@@ -16,6 +16,7 @@ namespace Store.Web
         {
             services.AddControllersWithViews();
             services.AddSingleton<IBookRepository, BookRepository>();
+            services.AddSingleton<BookService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
