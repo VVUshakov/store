@@ -1,5 +1,7 @@
 /*Moq эта така€ библиотека, котора€, пользу€сь мощностью €зыка C#, 
  *позвол€ет делать заглушки дл€ »нтерфейсов и јбстрактных классов.*/
+/*Moq is a library that, using the power of the C# language,
+ *allows you to stub Interfaces and Abstract Classes.*/
 using Moq;
 
 namespace Store.Tests
