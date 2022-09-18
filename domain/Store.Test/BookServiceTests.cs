@@ -6,8 +6,9 @@ using Moq;
 
 namespace Store.Tests
 {
-    public class BookServiceTests
+    public class StabBookRepository
     {
+
         [Fact]
         public void GetAllByQuery_WithIsbn_CallGetAllByIsbn()
         {           
@@ -18,8 +19,9 @@ namespace Store.Tests
             Assert.Collection(actual, book => Assert.Equal(1, book.Id));
         }
 
+
         [Fact]
-        public void GetAllByQuery_WithAuthor_CallGetAllByTitleOrAuthor()
+        public void GetAllByQuery_WithTitle_CallGetAllByTitleOrAuthor()
         {            
             string invalidIsbn = "12345-67890";
             BookService bookService = CreateStub(invalidIsbn);
@@ -28,7 +30,7 @@ namespace Store.Tests
             Assert.Collection(actual, book => Assert.Equal(2, book.Id));
         }
 
-        public static BookService CreateStub(string isIsbn)
+        private static BookService CreateStub(string isIsbn)
         {
             //ќборачиваем книжный репозиторий в класс Mock из библиотеки Moq.
             //Wrap the book repository in a Mock class from the Moq library.
@@ -47,10 +49,56 @@ namespace Store.Tests
                 bookRepositoryStub.Setup(x => x.GetAllByTitleOrAuthor(It.IsAny<string>()))
                     .Returns(new[] { new Book(2, "", "", "") });
 
-            //—оздаем "заглушку" к книжному репозиторию.
-            //Create a "stub" for the book repository.
-            var bookService = new BookService(bookRepositoryStub.Object);
-            return bookService;                        
+            //¬озвращаем "заглушку" к книжному репозиторию.
+            //We return the "stub" to the book repository.
+            return new BookService(bookRepositoryStub.Object);                        
+        }
+
+
+        ////////////////////////////////////////////////////
+        //“е же тесты, но без использовани€ библиотеки Moq//
+        ////////////////////////////////////////////////////
+
+        [Fact]
+        public void _GetAllByQuery_WithIsbn_CallGetAllByIsbn()
+        {
+            const int idOfIsbnSearch = 1;
+            string validIsbn = "ISBN 12345-67890";
+
+            Book[] books = _CreateStub(validIsbn);
+            Assert.Collection(books, book => Assert.Equal(idOfIsbnSearch, book.Id));
+        }
+
+        [Fact]
+        public void _GetAllByQuery_WithTitle_CallGetAllByTitleOrAuthor()
+        {            
+            const int idOfTitleOrAuthorSearch = 2;
+            string validTitleOrAuthor = "Programming";
+
+            Book[] books = _CreateStub(validTitleOrAuthor);
+            Assert.Collection(books, book => Assert.Equal(idOfTitleOrAuthorSearch, book.Id));
+        }
+
+        private static Book[] _CreateStub(string query)
+        {
+            const int idOfIsbnSearch = 1;
+            const int idOfTitleOrAuthorSearch = 2;
+
+            var bookRepository = new StubBookRepository
+            {
+                ResultOfGetAllByIsbn = new Book[]
+                {
+                    new Book(idOfIsbnSearch, "", "", ""),
+                },
+
+                ResultOfGetAllByTitleOrAuthor = new Book[]
+                {
+                    new Book(idOfTitleOrAuthorSearch, "", "", ""),
+                }
+            };
+
+            var bookService = new BookService(bookRepository);
+            return bookService.GetAllByQuery(query);
         }
     }
 }
