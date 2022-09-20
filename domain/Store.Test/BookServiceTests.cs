@@ -27,7 +27,7 @@ namespace Store.Tests
             BookService bookService = CreateStub(invalidIsbn);
 
             Book[] actual = bookService.GetAllByQuery(invalidIsbn);
-            Assert.Collection(actual, book => Assert.Equal(2, book.Id));
+            Assert.Collection(collection: actual, elementInspectors: book => Assert.Equal(2, book.Id));
         }
 
         private static BookService CreateStub(string isIsbn)
@@ -44,10 +44,10 @@ namespace Store.Tests
              *and replace them with "stubs" with indicators 1 and 2.*/
             if (Book.IsIsbn(isIsbn)) 
                 bookRepositoryStub.Setup(x => x.GetAllByIsbn(It.IsAny<string>()))
-                    .Returns(new[] { new Book(1, "", "", "") });
+                    .Returns(new[] { new Book(1, "", "", "", "", 12.24m) });
             else
                 bookRepositoryStub.Setup(x => x.GetAllByTitleOrAuthor(It.IsAny<string>()))
-                    .Returns(new[] { new Book(2, "", "", "") });
+                    .Returns(new[] { new Book(2, "", "", "", "", 65.17m) });
 
             //¬озвращаем "заглушку" к книжному репозиторию.
             //We return the "stub" to the book repository.
@@ -77,7 +77,7 @@ namespace Store.Tests
             string validTitleOrAuthor = "Programming";
 
             Book[] books = _CreateStub(validTitleOrAuthor);
-            Assert.Collection(books, book => Assert.Equal(idOfTitleOrAuthorSearch, book.Id));
+            Assert.Collection(collection: books, elementInspectors: book => Assert.Equal(idOfTitleOrAuthorSearch, book.Id));
         }
 
         private static Book[] _CreateStub(string query)
@@ -89,12 +89,12 @@ namespace Store.Tests
             {
                 ResultOfGetAllByIsbn = new Book[]
                 {
-                    new Book(idOfIsbnSearch, "", "", ""),
+                    new Book(idOfIsbnSearch, "", "", "", "", 52.12m),
                 },
 
                 ResultOfGetAllByTitleOrAuthor = new Book[]
                 {
-                    new Book(idOfTitleOrAuthorSearch, "", "", ""),
+                    new Book(idOfTitleOrAuthorSearch, "", "", "", "", 16.19m),
                 }
             };
 
